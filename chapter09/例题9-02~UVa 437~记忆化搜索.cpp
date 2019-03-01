@@ -2,25 +2,23 @@
 using namespace std;
 struct Block{
     int x,y,z;//长宽高
-    Block(int xx,int yy,int zz):x(xx),y(yy),z(zz) {}
+    Block(int a,int b,int c):x(a),y(b),z(c){}
 };
+int n;
 vector<Block>blocks;//存储所有可能摆放的立方体
-vector<vector<int>>DAG;//DAG图
-int n,dp[200];
-int DP(int i){
-    if(dp[i]!=0)//该结点已计算过，直接返回值
-        return dp[i];
-    if(DAG[i].empty())//叶结点
-        return dp[i]=blocks[i].z;//返回高
-    for(int j:DAG[i])//遍历能到达的结点
-        dp[i]=max(dp[i],blocks[i].z+DP(j));//计算最大高度
-    return dp[i];
+int DP(int v,vector<int>&dp){
+    if(dp[v]!=0)//该结点已计算过，直接返回值
+        return dp[v];
+    dp[v]=blocks[v].z;//dp数组初始化为对应立方体的高
+    for(int i=0;i<blocks.size();++i)//遍历所有立方体
+        if(blocks[i].x>blocks[v].x&&blocks[i].y>blocks[v].y)//当前遍历到的立方体长宽更大
+            dp[v]=max(dp[v],blocks[v].z+DP(i,dp));//计算最大高度
+    return dp[v];
 }
 int main(){
     for(int ii=1;~scanf("%d",&n)&&n!=0;++ii){
         blocks.clear();
-        DAG.clear();
-        while(n--){
+        for(int i=0;i<n;++i){
             int a[3];
             scanf("%d%d%d",&a[0],&a[1],&a[2]);
             for(int i=0;i<3;++i)//找出所有可以摆放的立方体
@@ -29,16 +27,10 @@ int main(){
                         if(i!=j&&i!=k&&j!=k)
                             blocks.push_back(Block(a[i],a[j],a[k]));
         }
-        DAG.resize(blocks.size());
-        for(int i=0;i<DAG.size();++i)//建立DAG图
-            for(int j=0;j<DAG.size();++j)
-                if(blocks[i].x<blocks[j].x&&blocks[i].y<blocks[j].y)
-                    DAG[i].push_back(j);
         int ans=0;
-        for(int i=0;i<blocks.size();++i){//计算出以各节点为起点的最大高度，并求出这些最大高度中的最大高度
-            memset(dp,0,sizeof(dp));
-            ans=max(ans,DP(i));
-        }
+        vector<int>dp(blocks.size(),0);
+        for(int i=0;i<blocks.size();++i)//计算出以各节点为起点的最大高度，并求出这些最大高度中的最大高度
+            ans=max(ans,DP(i,dp));
         printf("Case %d: maximum height = %d\n",ii,ans);
     }
     return 0;
