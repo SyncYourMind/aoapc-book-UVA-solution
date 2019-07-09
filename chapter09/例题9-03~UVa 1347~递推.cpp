@@ -14,7 +14,7 @@ int main(){
         for(int i=n-2;i>1;--i)
             for(int j=1;j<i;++j)
                 dp[i][j]=min(dist[i+1][i]+dp[i+1][j],dist[i+1][j]+dp[i+1][i]);
-        printf("%.2f\n",DP(2,1)+dist[2][1]);
+        printf("%.2f\n",dp[2][1]+dist[2][1]);
     }
     return 0;
 }
