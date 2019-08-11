@@ -4,7 +4,7 @@ int main(){
     int a,b,ans[10];
     while(cin>>a>>b&&a!=0){
         memset(ans,0,sizeof(ans));
-        if(a<b)//让a位大数，b位小数
+        if(a<b)//让a为大数，b为小数
             swap(a,b);
         int left1=a/10,left2=b/10,cur1=a%10,cur2=b%10,right1=0,right2=0,p=1;//p为10的次幂
         while(!(left1==0&&cur1==0)){//大数a所有位遍历完成，就可以跳出循环
